@@ -130,13 +130,6 @@ Nothing is sent to a server. Shares are stored in `chrome.storage.local` on your
 - Resizing text/arrow globally never moves markers you already placed.
 - Esc on the page clears selection / cancels pick; clicking a marker’s × dismisses that marker.
 
----
-
-## License
-
-MIT — see [LICENSE](LICENSE).
-
-Inspired by [franzenzenhofer/big-arrow-on-the-screen](https://github.com/franzenzenhofer/big-arrow-on-the-screen) (MIT). This is an independent Chrome implementation; no code was copied.
 
 ---
 
