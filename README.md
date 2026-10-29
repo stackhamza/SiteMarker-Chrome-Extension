@@ -1,6 +1,6 @@
 # SiteMarker
 
-[![SiteMarker](assets/thumbnail.svg)](https://github.com/stackhamza/SiteMarker-Chrome-Extension)
+[![SiteMarker](assets/thumbnail.png)](https://github.com/stackhamza/SiteMarker-Chrome-Extension)
 
 **Point at anything on a web page** with clear arrows, rings, boxes and signs. Built for tutorials, demos, onboarding and support.
 
