@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>SiteMarker</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19C5 11 9 8 15 8"/><path d="M13 3l6 5-6 5" fill="currentColor"/></svg>
+      </span>
+      <h1>SiteMarker</h1>
+    </div>
+    <div class="hdr-actions">
+      <button class="keys" id="reset" type="button" title="Put every setting back to its default">Reset</button>
+      <button class="keys" id="keys" type="button" title="Change the shortcut"></button>
+    </div>
+  </header>
+
+  <section class="stage" id="stage" aria-label="Live preview">
+    <span class="mock-btn" id="mockBtn">Allow</span>
+  </section>
+
+  <div class="field">
+    <label class="sr" for="text">Sign text</label>
+    <input id="text" maxlength="140" autocomplete="off" spellcheck="false" placeholder="Say something. Use {{code}} for a copy button">
+    <button id="shuffle" type="button" title="Suggest a phrase" aria-label="Suggest a phrase">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1" fill="currentColor"/></svg>
+    </button>
+  </div>
+
+  <div class="rows chg-rows">
+    <label class="row">
+      <span class="row-text"><b>Rich note</b><small>Free-form text under the sign (multi-line OK)</small></span>
+      <input class="switch" type="checkbox" id="changeOn">
+    </label>
+  </div>
+  <div class="chg-fields" id="chgFields" hidden>
+    <textarea id="richNote" maxlength="500" rows="3" autocomplete="off" spellcheck="true" placeholder="Write anything… e.g. Old title → New title&#10;Or notes for the reviewer" aria-label="Rich note under the sign"></textarea>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Settings">
+    <button type="button" role="tab" id="tab-look" aria-controls="panel-look" aria-selected="true">Look</button>
+    <button type="button" role="tab" id="tab-sizes" aria-controls="panel-sizes" aria-selected="false">Sizes</button>
+    <button type="button" role="tab" id="tab-behavior" aria-controls="panel-behavior" aria-selected="false">Behavior</button>
+  </div>
+
+  <section class="panel" id="panel-look" role="tabpanel" aria-labelledby="tab-look">
+    <div class="swatches" id="swatches" role="radiogroup" aria-label="Color"></div>
+    <div class="controls">
+      <div class="stack">
+        <div class="seg" role="radiogroup" aria-label="Style" data-key="style">
+          <button type="button" role="radio" data-value="arrow">Arrow</button>
+          <button type="button" role="radio" data-value="ring">Ring</button>
+          <button type="button" role="radio" data-value="box">Box</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Arrow shape" data-key="shape" id="shapeSeg">
+          <button type="button" role="radio" data-value="curve" title="Curve" aria-label="Curve"><svg viewBox="0 0 24 16" width="24" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13C5 4 12 3 21 8"/></svg></button>
+          <button type="button" role="radio" data-value="straight" title="Straight" aria-label="Straight"><svg viewBox="0 0 24 16" width="24" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L21 5"/></svg></button>
+          <button type="button" role="radio" data-value="zigzag" title="Zigzag" aria-label="Zigzag"><svg viewBox="0 0 24 16" width="24" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l4-7 5 7 5-7 4 4"/></svg></button>
+          <button type="button" role="radio" data-value="spiral" title="Spiral" aria-label="Spiral"><svg viewBox="0 0 24 16" width="24" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13C8 13 10 11 11 9c1-3-2-5-3-2-1 3 3 4 6 2 2-1 4-2 7-3"/></svg></button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Size" data-key="size">
+          <button type="button" role="radio" data-value="S">S</button>
+          <button type="button" role="radio" data-value="M">M</button>
+          <button type="button" role="radio" data-value="L">L</button>
+        </div>
+      </div>
+      <div class="pad" id="pad" role="radiogroup" aria-label="Where the sign sits"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-sizes" role="tabpanel" aria-labelledby="tab-sizes" hidden>
+    <div class="sliders">
+      <div class="slider"><label for="fontScale">Text size</label><input type="range" id="fontScale" min="50" max="250" step="5"><output id="fontOut" for="fontScale"></output></div>
+      <div class="slider"><label for="arrowScale">Arrow size</label><input type="range" id="arrowScale" min="50" max="250" step="5"><output id="arrowOut" for="arrowScale"></output></div>
+    </div>
+    <p class="count" id="count">Sliders update every sign on the page live.</p>
+    <div class="apply">
+      <button class="ghost sm" id="applyAll" type="button" title="Copy color, style, shape and size to every sign on this page. Signs stay where you put them.">Apply look to all</button>
+      <button class="ghost sm" id="resetPos" type="button" title="Undo all dragging">Reset positions</button>
+    </div>
+    <p class="howto">Drag a sign to move it. Drag the arrowhead to retarget. Double-click to edit text. Click a sign for more controls.</p>
+  </section>
+
+  <section class="panel" id="panel-behavior" role="tabpanel" aria-labelledby="tab-behavior" hidden>
+    <div class="rows">
+      <label class="row">
+        <span class="row-text"><b>Hide after a delay</b><small>Off keeps it until you close it</small></span>
+        <input class="switch" type="checkbox" id="autohide">
+      </label>
+      <label class="row">
+        <span class="row-text"><b>Hide on click</b><small>Removed when the target is clicked</small></span>
+        <input class="switch" type="checkbox" data-key="untilClick">
+      </label>
+      <label class="row">
+        <span class="row-text"><b>Close button</b><small>Adds an × to the sign</small></span>
+        <input class="switch" type="checkbox" data-key="closeButton">
+      </label>
+      <label class="row">
+        <span class="row-text"><b>Read aloud</b><small>Speaks the sign text</small></span>
+        <input class="switch" type="checkbox" data-key="say">
+      </label>
+      <label class="row">
+        <span class="row-text"><b>Outline edge</b><small>Black outline for busy pages</small></span>
+        <input class="switch" type="checkbox" id="outline">
+      </label>
+      <label class="row">
+        <span class="row-text"><b>Steps mode</b><small>Show one sign at a time; next/prev and scroll to each</small></span>
+        <input class="switch" type="checkbox" id="stepsOn">
+      </label>
+      <label class="row">
+        <span class="row-text"><b>Inline editor</b><small>Click any page text → point at it and edit it</small></span>
+        <input class="switch" type="checkbox" id="inlineEditOn">
+      </label>
+    </div>
+    <div class="duration" id="durRow">
+      <label for="duration">Delay</label>
+      <input type="range" id="duration" min="1" max="60" step="1">
+      <output id="durOut" for="duration"></output>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button class="primary" id="pick" type="button">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 7-6 2-2 6z"/></svg>
+      Pick a target
+    </button>
+    <button class="ghost" id="share" type="button" title="Make a feedback page of the signs on this page">Share</button>
+    <button class="ghost" id="clear" type="button">Clear</button>
+  </div>
+  <div class="actions tour-actions">
+    <button class="ghost sm" id="addTour" type="button" title="Capture each sign as its own section and add to the tour">Add sections to tour</button>
+    <button class="ghost sm" id="shareTour" type="button" title="Share all tour pages with next/prev navigation" hidden>Share tour</button>
+    <button class="ghost sm" id="clearTour" type="button" title="Clear the multi-page tour" hidden>Clear tour</button>
+  </div>
+  <p class="tour-status" id="tourStatus" hidden></p>
+  <p class="msg" id="msg" role="status"></p>
+
+  <script src="core.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
